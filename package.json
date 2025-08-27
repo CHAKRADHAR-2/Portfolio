@@ -64,7 +64,7 @@
     "react-router-dom": "^6.26.2",
     "react-spring": "^9.7.3",
     "react-tilt": "^1.0.2",
-    "react-typed": "^1.2.0",
+    "typed.js": "^2.1.0",
     "recharts": "^2.12.7",
     "sonner": "^1.5.0",
     "tailwind-merge": "^2.5.2",

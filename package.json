@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -40,8 +39,6 @@
     "@radix-ui/react-toggle": "^1.1.0",
     "@radix-ui/react-toggle-group": "^1.1.0",
     "@radix-ui/react-tooltip": "^1.1.4",
-    "@react-three/drei": "^9.99.0",
-    "@react-three/fiber": "^8.15.16",
     "@tanstack/react-query": "^5.56.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -63,7 +60,6 @@
     "react-resizable-panels": "^2.1.3",
     "react-router-dom": "^6.26.2",
     "react-tilt": "^1.0.2",
-    "react-typed": "npm:typed.js@^2.1.0",
     "typed.js": "^2.1.0",
     "recharts": "^2.12.7",
     "sonner": "^1.5.0",
@@ -92,13 +88,5 @@
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.1",
     "vite": "^5.4.1"
-  },
-  "resolutions": {
-    "react-typed": "npm:typed.js@^2.1.0"
-  },
-  "overrides": {
-    "react-typed": "npm:typed.js@^2.1.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
   }
 }

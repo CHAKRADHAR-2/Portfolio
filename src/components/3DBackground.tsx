@@ -1,143 +1,90 @@
-import { useRef, useEffect } from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls, Sphere, MeshDistortMaterial, Float, Text3D, Center } from '@react-three/drei';
-import * as THREE from 'three';
+import { useEffect, useRef } from 'react';
 
-// Animated floating particles
-const FloatingParticles = ({ count = 100 }) => {
-  const mesh = useRef<THREE.InstancedMesh>(null);
-  const { size, viewport } = useThree();
-  const aspect = size.width / viewport.width;
+// Simple CSS-based animated background
+const ThreeDBackground = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    if (!mesh.current) return;
-    
-    const tempObject = new THREE.Object3D();
-    for (let i = 0; i < count; i++) {
-      tempObject.position.set(
-        (Math.random() - 0.5) * 25,
-        (Math.random() - 0.5) * 25,
-        (Math.random() - 0.5) * 25
-      );
-      tempObject.updateMatrix();
-      mesh.current.setMatrixAt(i, tempObject.matrix);
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles: Array<{
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      size: number;
+    }> = [];
+
+    // Create particles
+    for (let i = 0; i < 50; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: (Math.random() - 0.5) * 0.5,
+        vy: (Math.random() - 0.5) * 0.5,
+        size: Math.random() * 2 + 1,
+      });
     }
-    mesh.current.instanceMatrix.needsUpdate = true;
-  }, [count]);
 
-  useFrame((state) => {
-    if (!mesh.current) return;
-    
-    const time = state.clock.getElapsedTime();
-    const tempObject = new THREE.Object3D();
-    
-    for (let i = 0; i < count; i++) {
-      const id = i;
-      tempObject.position.set(
-        (Math.random() - 0.5) * 25 + Math.sin(time + id) * 2,
-        (Math.random() - 0.5) * 25 + Math.cos(time + id) * 2,
-        (Math.random() - 0.5) * 25 + Math.sin(time + id * 0.5) * 2
-      );
-      tempObject.updateMatrix();
-      mesh.current.setMatrixAt(id, tempObject.matrix);
-    }
-    mesh.current.instanceMatrix.needsUpdate = true;
-  });
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Update and draw particles
+      particles.forEach((particle) => {
+        particle.x += particle.vx;
+        particle.y += particle.vy;
 
-  return (
-    <instancedMesh ref={mesh} args={[undefined, undefined, count]}>
-      <sphereGeometry args={[0.05, 8, 8]} />
-      <meshBasicMaterial color="#00FFFF" />
-    </instancedMesh>
-  );
-};
+        // Wrap around edges
+        if (particle.x < 0) particle.x = canvas.width;
+        if (particle.x > canvas.width) particle.x = 0;
+        if (particle.y < 0) particle.y = canvas.height;
+        if (particle.y > canvas.height) particle.y = 0;
 
-// Neural network connections
-const NeuralConnections = () => {
-  const group = useRef<THREE.Group>(null);
+        // Draw particle
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+        ctx.fillStyle = '#00FFFF';
+        ctx.fill();
+      });
 
-  useFrame((state) => {
-    if (!group.current) return;
-    group.current.rotation.y = state.clock.getElapsedTime() * 0.1;
-  });
+      requestAnimationFrame(animate);
+    };
 
-  return (
-    <group ref={group}>
-      {Array.from({ length: 20 }, (_, i) => (
-        <mesh key={i} position={[
-          (Math.random() - 0.5) * 20,
-          (Math.random() - 0.5) * 20,
-          (Math.random() - 0.5) * 20
-        ]}>
-          <sphereGeometry args={[0.02, 8, 8]} />
-          <meshBasicMaterial color="#FF00FF" />
-        </mesh>
-      ))}
-    </group>
-  );
-};
+    animate();
 
-// Holographic sphere
-const HolographicSphere = () => {
-  const meshRef = useRef<THREE.Mesh>(null);
+    const handleResize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
 
-  useFrame((state) => {
-    if (!meshRef.current) return;
-    meshRef.current.rotation.x = state.clock.getElapsedTime() * 0.5;
-    meshRef.current.rotation.y = state.clock.getElapsedTime() * 0.3;
-  });
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
-  return (
-    <Float speed={2} rotationIntensity={0.5} floatIntensity={0.5}>
-      <Sphere ref={meshRef} args={[1, 100, 200]} scale={2}>
-        <MeshDistortMaterial
-          color="#00FFFF"
-          attach="material"
-          distort={0.4}
-          speed={2}
-          roughness={0}
-          metalness={1}
-        />
-      </Sphere>
-    </Float>
-  );
-};
-
-// Energy field
-const EnergyField = () => {
-  const meshRef = useRef<THREE.Mesh>(null);
-
-  useFrame((state) => {
-    if (!meshRef.current) return;
-    meshRef.current.rotation.z = state.clock.getElapsedTime() * 0.2;
-  });
-
-  return (
-    <mesh ref={meshRef} position={[0, 0, -5]}>
-      <ringGeometry args={[8, 8.5, 64]} />
-      <meshBasicMaterial color="#00FFFF" transparent opacity={0.3} />
-    </mesh>
-  );
-};
-
-// Main 3D Background Component
-const ThreeDBackground = () => {
   return (
     <div className="fixed inset-0 -z-10">
-      <Canvas camera={{ position: [0, 0, 10], fov: 75 }}>
-        <ambientLight intensity={0.5} />
-        <pointLight position={[10, 10, 10]} intensity={1} color="#00FFFF" />
-        <pointLight position={[-10, -10, -10]} intensity={0.5} color="#FF00FF" />
-        
-        <FloatingParticles count={200} />
-        <NeuralConnections />
-        <HolographicSphere />
-        <EnergyField />
-        
-        <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.5} />
-      </Canvas>
+      <canvas
+        ref={canvasRef}
+        className="w-full h-full"
+        style={{
+          background: 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%)',
+        }}
+      />
+      {/* Additional CSS animations */}
+      <div className="absolute inset-0 opacity-30">
+        <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-xl animate-pulse" />
+        <div className="absolute top-3/4 right-1/4 w-24 h-24 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-full blur-xl animate-pulse" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-1/2 left-1/2 w-40 h-40 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '4s' }} />
+      </div>
     </div>
   );
 };
 
-export default ThreeDBackground; 
+export default ThreeDBackground;

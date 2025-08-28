@@ -1,5 +1,6 @@
 {
-  "buildCommand": "yarn install && yarn build",
-  "installCommand": "yarn install",
-  "framework": "vite"
+  "buildCommand": "npm install --force --legacy-peer-deps && npm run build",
+  "installCommand": "npm install --force --legacy-peer-deps",
+  "framework": "vite",
+  "outputDirectory": "dist"
 }

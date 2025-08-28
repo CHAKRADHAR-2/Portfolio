@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm install --force --legacy-peer-deps && npm run build",
-  "installCommand": "npm install --force --legacy-peer-deps",
+  "buildCommand": "yarn install && yarn build",
+  "installCommand": "yarn install",
   "framework": "vite"
 }

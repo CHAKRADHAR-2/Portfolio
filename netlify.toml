@@ -1,6 +1,6 @@
 [build]
   publish = "dist"
-  command = "npm install --legacy-peer-deps --force && npm run build"
+  command = "chmod +x build.sh && ./build.sh"
 
 [build.environment]
   NODE_VERSION = "18"

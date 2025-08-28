@@ -4,16 +4,17 @@ A modern, responsive portfolio website built with React, TypeScript, and Vite.
 
 ## Deployment Options
 
-### Option 1: Netlify (Recommended)
-1. Connect your GitHub repository to Netlify
-2. Netlify will automatically detect the `netlify.toml` configuration
-3. The build will use `--legacy-peer-deps --force` flags to handle dependency conflicts
+### Option 1: GitHub Pages (Recommended)
+1. Enable GitHub Pages in your repository settings
+2. Set source to "GitHub Actions"
+3. The workflow will automatically build and deploy on push to master/main
+4. Your site will be available at `https://yourusername.github.io/Portfolio/`
 
-### Option 2: Vercel
-If you prefer Vercel, the repository includes configuration files for both platforms.
+### Option 2: Netlify
+Connect your GitHub repository to Netlify with the included `netlify.toml` configuration.
 
-### Option 3: GitHub Pages
-You can also deploy to GitHub Pages using GitHub Actions.
+### Option 3: Vercel
+The repository includes Vercel configuration files for deployment.
 
 ## Local Development
 
